@@ -79,8 +79,8 @@ class Donut {
 } //end class Donut
 
 const board = new Board();
-const donita = new Donut(20, 100);
-const donita1 = new Donut(30, 250);
+const donita = new Donut(5, 100);
+const donita1 = new Donut(7, 250);
 /*
 const donita2 = new Donut(8, 400);
 const donita3 = new donita(7, 550);
