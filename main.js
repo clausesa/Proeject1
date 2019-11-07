@@ -1,11 +1,21 @@
+// Variablessss
+
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
 let interval;
 let frames = 0;
+let donas = [];
+let timeout;
+let totalScore = 0;
+let counter =0; 
+
+
 const images = {
   donut: 'Images/donut3.png',
   bg: 'Images/bg1.jpg'
 };
+
+//////////////////**CLASES */
 
 class Board {
   constructor() {
@@ -21,17 +31,14 @@ class Board {
   } //fin constructor
   draw() {
     clearInterval();
-    //this.y -= 3;
-    //if (this.y < -canvas.height && frames % 5 === 0) this.y = 0;
     ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
-    //ctx.drawImage(this.img, this.x, this.y + canvas.height, this.width, this.height);
   }
   drawCircles() {
     if (ctx) {
       for (let i = 0; i < 5; i++) {
         ctx.fillStyle = '#F73D8C';
         ctx.strokeStyle = '#F73DE9';
-        ctx.arc(150 + 150 * i, 650, 50, 0, 2 * Math.PI);
+        ctx.arc(150 + 200 * i, 650, 50, 0, 2 * Math.PI);
         ctx.fill();
       } //end for
     } //end if
@@ -53,69 +60,105 @@ class Donut {
       this.draw();
     };
   }
-
   draw() {
-    if (this.y > canvas.height) {
-      this.y = 0;
-    }
-
     this.y += this.speed;
-    console.log(this.speed);
     ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
   }
-  isTouching() {
-    return this.y > 550 && this.y < 600;
-  }
 
-  isFail() {
-    if (this.y > 601) {
-      ctx.font = 'bold 40px Serif';
-      ctx.fillStyle = 'magenta';
-      ctx.fillText('Fail!!', this.x, 760);
 
-      //this.fails += 1;
-    }
-  } //end isFail
 } //end class Donut
 
 const board = new Board();
-const donita = new Donut(5, 100);
-const donita1 = new Donut(7, 250);
-/*
-const donita2 = new Donut(8, 400);
-const donita3 = new donita(7, 550);
-const donita4 = new Donut(9, 700);
-*/
+
+
+
+//////////////////***************FUNCIONES */
 function clearCanvas() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
-window.onload = function() {
+function generateDonuts() {
+
+  if (frames % 15 === 0) {
+
+    let positionDonuts = [100, 300, 500, 700];
+
+    let donita = new Donut(Math.floor(Math.random() * (14 - 7) + 7), positionDonuts[Math.floor(Math.random() * positionDonuts.length)]);
+    donas.push(donita);
+  }
+}
+
+function drawDonas(frames) {
+  donas.forEach((donass) => donass.draw());
+}
+
+
+function checkOutOfCanvas() {
+
+  donas.forEach((dona) => {
+    if (dona.y > 800) {
+      donas.splice();
+    }
+  });
+}
+
+function timer() {
+  timeout = setTimeout(gameOver, 5000);
+}
+
+
+function gameOver() {
+  ctx.font = 'bold 80px Serif';
+  ctx.fillStyle = 'magenta';
+  ctx.fillText('Time!', 400, 300);
+  ctx.fillText(`Score: ${totalScore}`, 400, 450);
+  clearInterval(interval);
+}
+
+
+window.onload = function () {
   startGame();
 
   function startGame() {
     interval = setInterval(update, 1000 / 60);
   }
 
-  function update() {
-    frames++;
-    clearCanvas();
-    board.draw();
-    board.drawCircles();
-    donita.draw();
-    donita.isFail();
-    donita1.draw();
-    donita1.isFail();
-  } //end update
-}; //end window.onload
+}
+
+function update() {
+  timer();
+  frames++;
+  clearCanvas();
+  board.draw();
+  board.drawCircles();
+  generateDonuts();
+  drawDonas();
+}
+
+
+
+
 
 document.onkeydown = (e) => {
   switch (e.keyCode) {
     case 65:
-      if (donita.isTouching()) {
-        donita.score += 5;
-        clearCanvas();
-        donita.y += 300;
-      }
+      console.log("hola desdae case 65");
+      totalScore++;
+      break;
+    case 83:
+      totalScore++;
+
+      break;
+    case 75:
+      totalScore++;
+      break;
+    case 76:
+      totalScore++;
+      break;
   } //end switch
-}; //End listener onkeypress
+};
+
+document.onkeyup = e => {
+
+
+}
