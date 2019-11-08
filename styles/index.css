@@ -2,16 +2,23 @@ body {
   margin: 0;
   top: 0;
   left: 0;
-  /*background-image: url(/Images/bg_indx.jpg);*/
   background-color: #FFD90F;
   align-content: center;
   text-align: center;
 }
 
-#logo{
+
+
+
+#logo {
   margin-top: 50px;
 }
-#buttons{
+
+.buttons {
+  align-content: center;
+  width: 600px;
+  height: 300px;
   position: relative;
+
 
 }

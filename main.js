@@ -7,7 +7,8 @@ let frames = 0;
 let donas = [];
 let timeout;
 let totalScore = 0;
-let counter =0; 
+let counter = 0;
+
 
 
 const images = {
@@ -36,6 +37,7 @@ class Board {
   drawCircles() {
     if (ctx) {
       for (let i = 0; i < 5; i++) {
+
         ctx.fillStyle = '#F73D8C';
         ctx.strokeStyle = '#F73DE9';
         ctx.arc(150 + 200 * i, 650, 50, 0, 2 * Math.PI);
@@ -78,26 +80,38 @@ function clearCanvas() {
 }
 
 function generateDonuts() {
+  let positionDonuts = [100, 300, 500, 700];
 
   if (frames % 15 === 0) {
-
-    let positionDonuts = [100, 300, 500, 700];
-
     let donita = new Donut(Math.floor(Math.random() * (14 - 7) + 7), positionDonuts[Math.floor(Math.random() * positionDonuts.length)]);
     donas.push(donita);
   }
 }
 
 function drawDonas(frames) {
-  donas.forEach((donass) => donass.draw());
+  donas.forEach((dona) => dona.draw());
+}
+
+function touchDona(x) {
+  donas.forEach((dona, i) => {
+    if (x === dona.x) {
+      console.log(dona)
+      if (dona.y < 650 && dona.y > 550) {
+        donas.splice(i, 1)
+        totalScore++
+
+
+
+      }
+    }
+  })
 }
 
 
 function checkOutOfCanvas() {
-
-  donas.forEach((dona) => {
+  donas.forEach((dona, i) => {
     if (dona.y > 800) {
-      donas.splice();
+      donas.splice(i, 1);
     }
   });
 }
@@ -108,12 +122,23 @@ function timer() {
 
 
 function gameOver() {
-  ctx.font = 'bold 80px Serif';
-  ctx.fillStyle = 'magenta';
-  ctx.fillText('Time!', 400, 300);
-  ctx.fillText(`Score: ${totalScore}`, 400, 450);
+
   clearInterval(interval);
+
+  ctx.font = 'bold 100px Serif';
+  ctx.fillStyle = "black";
+  ctx.strokeStyle = 'yellow';
+  ctx.fillText('Time!', 300, 300);
+  ctx.strokeText('Time!', 300, 300);
+  ctx.fillStyle = "black";
+  ctx.strokeStyle = 'yellow';
+  ctx.fillText(`Score: ${totalScore}`, 300, 450);
+  ctx.strokeText(`Score: ${totalScore}`, 300, 450);
+
 }
+
+
+
 
 
 window.onload = function () {
@@ -133,6 +158,9 @@ function update() {
   board.drawCircles();
   generateDonuts();
   drawDonas();
+  checkOutOfCanvas()
+
+
 }
 
 
@@ -142,19 +170,21 @@ function update() {
 document.onkeydown = (e) => {
   switch (e.keyCode) {
     case 65:
+      touchDona(100)
       console.log("hola desdae case 65");
-      totalScore++;
       break;
     case 83:
-      totalScore++;
-
+      touchDona(300)
       break;
     case 75:
-      totalScore++;
+      touchDona(500)
       break;
     case 76:
-      totalScore++;
+      touchDona(700)
       break;
+
+
+
   } //end switch
 };
 
