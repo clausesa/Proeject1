@@ -6,10 +6,10 @@ let interval;
 let frames = 0;
 let donas = [];
 let timeout;
-let totalScore = 0;
-let counter = 0;
-
-
+let singlescore = 0;
+let onescore = 0;
+let twoscore = 0;
+let winner = ['Player One', 'Player Two', 'Ok there is no winner try it again'];
 
 const images = {
   donut: 'Images/donut3.png',
@@ -43,6 +43,25 @@ class Board {
         ctx.arc(150 + 200 * i, 650, 50, 0, 2 * Math.PI);
         ctx.fill();
       } //end for
+      ctx.font = 'bold 100px Serif';
+      ctx.fillStyle = "white";
+      ctx.strokeStyle = 'purple';
+      ctx.fillText('A', 115, 680);
+      ctx.strokeText('A', 115, 680);
+      ctx.fillStyle = "white";
+      ctx.strokeStyle = 'purple';
+      ctx.fillText('S', 325, 680);
+      ctx.strokeText('S', 325, 680);
+      ctx.fillStyle = "white";
+      ctx.strokeStyle = 'purple';
+      ctx.fillText('L', 720, 680);
+      ctx.strokeText('L', 720, 680);
+
+      ctx.font = 'bold 95px Serif';
+      ctx.fillStyle = "white";
+      ctx.strokeStyle = 'purple';
+      ctx.fillText('K', 515, 680);
+      ctx.strokeText('K', 515, 680);
     } //end if
   } //end drawCircles
 } // fin de la clase board
@@ -66,13 +85,9 @@ class Donut {
     this.y += this.speed;
     ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
   }
-
-
 } //end class Donut
 
 const board = new Board();
-
-
 
 //////////////////***************FUNCIONES */
 function clearCanvas() {
@@ -95,17 +110,29 @@ function drawDonas(frames) {
 function touchDona(x) {
   donas.forEach((dona, i) => {
     if (x === dona.x) {
-      console.log(dona)
-      if (dona.y < 650 && dona.y > 550) {
+      if (dona.y < 700 && dona.y > 580) {
         donas.splice(i, 1)
-        totalScore++
-
-
-
+        if (x === 100 || x === 300) {
+          onescore++;
+        } else if (x === 500 || x === 700) {
+          twoscore++;
+        }
       }
     }
   })
+
 }
+
+function getWinner() {
+  if (onescore > twoscore) {
+    return winner[0];
+  } else if (twoscore > onescore) {
+    return winner[1];
+  } else {
+    return winner[2];
+  }
+}
+
 
 
 function checkOutOfCanvas() {
@@ -122,24 +149,26 @@ function timer() {
 
 
 function gameOver() {
-
-  clearInterval(interval);
-
   ctx.font = 'bold 100px Serif';
   ctx.fillStyle = "black";
   ctx.strokeStyle = 'yellow';
   ctx.fillText('Time!', 300, 300);
   ctx.strokeText('Time!', 300, 300);
+  ctx.font = 'bold 40px Serif';
   ctx.fillStyle = "black";
   ctx.strokeStyle = 'yellow';
-  ctx.fillText(`Score: ${totalScore}`, 300, 450);
-  ctx.strokeText(`Score: ${totalScore}`, 300, 450);
-
+  ctx.fillText(`Winner: ${getWinner()}`, 90, 450);
+  ctx.strokeText(`Winner: ${getWinner()}`, 90, 450);
+  ctx.fillStyle = "black";
+  ctx.strokeStyle = 'yellow';
+  ctx.fillText(`Score Player One: ${onescore}`, 250, 500);
+  ctx.strokeText(`Score Player One: ${onescore}`, 250, 500);
+  ctx.fillStyle = "black";
+  ctx.strokeStyle = 'yellow';
+  ctx.fillText(`Score Player Two: ${twoscore}`, 250, 560);
+  ctx.strokeText(`Score Player Two: ${twoscore}`, 250, 560);
+  clearInterval(interval);
 }
-
-
-
-
 
 window.onload = function () {
   startGame();
@@ -147,7 +176,6 @@ window.onload = function () {
   function startGame() {
     interval = setInterval(update, 1000 / 60);
   }
-
 }
 
 function update() {
@@ -159,19 +187,12 @@ function update() {
   generateDonuts();
   drawDonas();
   checkOutOfCanvas()
-
-
 }
-
-
-
-
 
 document.onkeydown = (e) => {
   switch (e.keyCode) {
     case 65:
       touchDona(100)
-      console.log("hola desdae case 65");
       break;
     case 83:
       touchDona(300)
@@ -183,12 +204,5 @@ document.onkeydown = (e) => {
       touchDona(700)
       break;
 
-
-
   } //end switch
 };
-
-document.onkeyup = e => {
-
-
-}
